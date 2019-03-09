@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>blog</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- ZUI 标准版压缩后的 CSS 文件 -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/zui/1.8.1/css/zui.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <!-- ZUI 标准版压缩后的 JavaScript 文件 -->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/zui/1.8.1/js/zui.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- marked插件 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- hightlight插件 -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.6/build/styles/default.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.6/build/highlight.min.js"></script>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="navbar-collapse collapse" style="text-align: center;">
+                    <ul class="nav navbar-nav" style="display: inline-block;float: none;">
+                        <li class="active"> <a href="/index">首页</a> </li>
+                        <li> <a href="/write">写作</a> </li>
+                        <li> <a href="/config">管理</a> </li>
+                        <li> <a href="/message">留言</a> </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="row clearfix">
+        <div class="col-md-2 column">
+        </div>
+        <div class="col-md-8 column">
+            <div class="row clearfix">
+                <div class="col-md-3 column">
+                    <nav class="menu" data-ride="menu">
+                        <ul id="treeMenu" class="tree tree-menu" data-ride="tree">
+                            <li>
+                                <a href="#">全部</a>
+                                <ul th:each="article: ${articles}">
+                                    <li><a th:onclick="'javascript:show(\'' + ${article.id} + '\')'" th:text="${article.title}">文章</a></li>
+                                </ul>
+                            </li>
+                            <li th:each="folder: ${folders}">
+                                <a href="#" th:text="${folder.name}">目录</a>
+                                <ul th:each="article: ${folder.articles}">
+                                    <li><a th:onclick="'javascript:show(\'' + ${article.id} + '\')'" th:text="${article.title}">文章</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <form action="/folder/new" method="post">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="name">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">添加</button>
+                                </span>
+                            </div>
+                        </form>
+                    </nav>
+                </div>
+                <div class="col-md-9 column">
+                    <div id="content"></div>
+                    <script>
+                        $(function () {
+                            //marked插件的基本配置
+                            marked.setOptions({
+                                renderer: new marked.Renderer(),
+                                gfm: true,
+                                tables: true,
+                                breaks: false,
+                                pedantic: false,
+                                sanitize: false,
+                                smartLists: true,
+                                smartypants: false,
+                                highlight: function (code, lang) {
+                                    //使用 highlight 插件解析文档中代码部分
+                                    return hljs.highlightAuto(code, [lang]).value;
+                                }
+                            });
+                            $.ajax({
+                                type: "get",
+                                url: "showArticle?id="+1,
+                                async: false,
+                                dataType: "json",
+                                success: function (article) {
+                                    document.getElementById('content').innerHTML = marked(article.text);
+                                    //渲染文档中代码部分
+                                    hljs.initHighlighting();
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 column">
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function show(id) {
+        $.ajax({
+            type: "get",
+            url: "showArticle?id=" + id,
+            async: false,
+            dataType: "json",
+            success: function (article) {
+                document.getElementById('content').innerHTML = marked(article.text);
+                //渲染文档中代码部分
+                hljs.initHighlighting();
+            }
+        });
+    }
+</script>
+</html>
