@@ -45,55 +45,11 @@
     <div class="row clearfix">
         <div class="col-md-3 column">
         </div>
-        <div class="col-md-6 column">
-            <div class="row clearfix">
-                <table class="table table-striped">
-                    <thead>
-                    <th>ID</th>
-                    <th>NAME</th>
-                    <th>OPTION</th>
-                    </thead>
-                    <tbody>
-                    <tr th:each="folder: ${folders}">
-                        <td th:text="${folder.id}"></td>
-                        <td th:text="${folder.name}"></td>
-                        <td><a th:href="@{'/folder/delete?id=' + ${folder.id}}">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="row clearfix">
-                <table class="table table-striped">
-                    <thead>
-                    <th>ID</th>
-                    <th>TITLE</th>
-                    <th>FOLDER_ID</th>
-                    <th>PUBLISH_TIME</th>
-                    <th>MODITY_TIME</th>
-                    <th>OPTION</th>
-                    </thead>
-                    <tbody>
-                    <tr th:each="article: ${articles}">
-                        <td th:text="${article.id}"></td>
-                        <td th:text="${article.title}"></td>
-                        <td th:text="${article.folderId}"></td>
-                        <td th:text="${article.publishTime}"></td>
-                        <td th:text="${article.modifyTime}"></td>
-                        <td>
-                            <a th:href="@{'/article/editor?id=' + ${article.id}}">
-                                <span class="glyphicon glyphicon-pencil"></span>
-                            </a>
-                            &nbsp;&nbsp;
-                            <a th:href="@{'/article/delete?id=' + ${article.id}}">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="col-md-6 column" style="text-align: center">
+            <form action="/login" method="post">
+                请输入管理员密码：<input name="password">
+                <button type="submit">enter</button>
+            </form>
         </div>
         <div class="col-md-3 column">
         </div>

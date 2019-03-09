@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -35,12 +36,6 @@ public class MainController {
         return "index";
     }
 
-    @ResponseBody
-    @RequestMapping("showArticle")
-    public Article article(Integer id) {
-        return articleDao.findById(id).orElse(null);
-    }
-
     @RequestMapping("write")
     public String write(Model model) {
         List<Folder> folders = folderDao.findAll();
@@ -55,5 +50,34 @@ public class MainController {
         model.addAttribute("folders", folders);
         model.addAttribute("articles", articles);
         return "config";
+    }
+
+    @RequestMapping("message")
+    public String message() {
+        return "message";
+    }
+
+    @RequestMapping("pass")
+    public String pass() {
+        return "pass";
+    }
+
+
+    @RequestMapping("login")
+    public String login(String password, Model model, HttpSession session) {
+        if (password.equals("missyou")) {
+            model.addAttribute("message", "登录成功！");
+            session.setAttribute("HasPermission", true);
+            return "result";
+        } else {
+            model.addAttribute("message", "密码错误！");
+            return "result";
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("showArticle")
+    public Article article(Integer id) {
+        return articleDao.findById(id).orElse(null);
     }
 }
